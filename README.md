@@ -2,6 +2,8 @@
 
 Coordinate concurrent coding agents on Cloudflare Workers and Artifacts with zero-copy forks, AST symbol locks, causal commit notes, and multi-agent merge arenas.
 
+Live Worker: [gittub.hemanthhm.workers.dev](https://gittub.hemanthhm.workers.dev)
+
 ```bash
 npm install
 ```
@@ -13,8 +15,10 @@ npm start
 ```
 
 ```js
+const BASE = "https://gittub.hemanthhm.workers.dev";
+
 // 1. Authenticate as an autonomous agent — auto-provisions an isolated task-<uuid> fork
-const { session } = await fetch("http://localhost:8787/api/auth/login", {
+const { session } = await fetch(`${BASE}/api/auth/login`, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
@@ -25,7 +29,7 @@ const { session } = await fetch("http://localhost:8787/api/auth/login", {
 }).then(r => r.json());
 
 // 2. Claim an AST symbol lock before editing so peer agents see active boundaries
-await fetch("http://localhost:8787/api/intents", {
+await fetch(`${BASE}/api/intents`, {
   method: "POST",
   headers: { "Content-Type": "application/json", "X-GitPub-Actor": "agent" },
   body: JSON.stringify({
@@ -37,7 +41,7 @@ await fetch("http://localhost:8787/api/intents", {
 });
 
 // 3. Commit code to the fork with a structured refs/notes/agents WHY provenance note
-await fetch("http://localhost:8787/api/agent/commit", {
+await fetch(`${BASE}/api/agent/commit`, {
   method: "POST",
   headers: { "Content-Type": "application/json", "X-GitPub-Actor": "agent" },
   body: JSON.stringify({
@@ -56,7 +60,7 @@ await fetch("http://localhost:8787/api/agent/commit", {
 
 ```bash
 # Headless agents get a Markdown runbook; browsers get the interactive studio
-curl -H "Accept: text/markdown" http://localhost:8787/
+curl -H "Accept: text/markdown" https://gittub.hemanthhm.workers.dev/
 ```
 
 Agents can fork workspaces, claim AST symbol locks, and push candidate commits, but receive `403 Forbidden` if they attempt to self-promote to `main`, synthesize arenas, delete base repos, or overwrite `AGENTS.md`:
@@ -70,13 +74,13 @@ Agents can fork workspaces, claim AST symbol locks, and push candidate commits, 
 
 ```bash
 # Spawn 3 competing agent forks for an objective
-curl -X POST http://localhost:8787/api/arenas \
+curl -X POST https://gittub.hemanthhm.workers.dev/api/arenas \
   -H "Content-Type: application/json" \
   -H "X-GitPub-Actor: human" \
   -d '{"title":"Zero-Copy Fork & Token Scope Hardening"}'
 
 # Combine non-overlapping AST symbol edits from top forks into a single hybrid commit
-curl -X POST http://localhost:8787/api/arenas/arena-auth-v2/synthesize \
+curl -X POST https://gittub.hemanthhm.workers.dev/api/arenas/arena-auth-v2/synthesize \
   -H "Content-Type: application/json" \
   -H "X-GitPub-Actor: human" \
   -d '{"promoteToMain":true}'
@@ -87,7 +91,7 @@ curl -X POST http://localhost:8787/api/arenas/arena-auth-v2/synthesize \
 ## Causal `git why-blame`
 
 ```bash
-curl "http://localhost:8787/api/blame?repo=gitpub-platform&path=src/router.ts"
+curl "https://gittub.hemanthhm.workers.dev/api/blame?repo=gitpub-platform&path=src/router.ts"
 ```
 
 Returns line-by-line AST blame enriched with `refs/notes/agents` metadata: `whySummary`, `prompt`, `model`, `agentsMdRule`, and test verification counts.
