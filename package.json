@@ -1,0 +1,21 @@
+{
+	"name": "gitpub",
+	"version": "1.0.0",
+	"license": "MIT",
+	"private": false,
+	"type": "module",
+	"scripts": {
+		"dev": "cf dev",
+		"start": "node scripts/dev-server.ts",
+		"build": "cf build",
+		"deploy": "cf deploy",
+		"typecheck": "cf workers types && tsc",
+		"test": "node --test test/gitpub.test.ts"
+	},
+	"devDependencies": {
+		"@cloudflare/vite-plugin": "beta",
+		"cf": "^1.0.0-beta.12",
+		"typescript": "^7.0.2",
+		"vite": "^8.3.0"
+	}
+}
